@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clarissa Dario Arquitetura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              clarissa: {
+                background: '#F7F1EB',
+                primary: '#CB956F',
+                primaryhover: '#B98460', // For hover states
+                secondary: '#AD9F97',
+                dark: '#3E3E3E',
+                text: '#4A4A4A', 
+                accent: '#E6A07D',
+                success: '#6CB95F',
+                danger: '#D9534F',
+                warning: '#F0AD4E',
+                lightgray: '#E0E0E0',
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            borderRadius: {
+              'xl': '0.75rem', // slightly smaller for a cleaner look
+              '2xl': '1rem',
+            },
+            boxShadow: {
+              'subtle': '0 2px 8px rgba(0,0,0,0.06)',
+              'medium': '0 6px 12px rgba(0,0,0,0.1)',
+              'float': '0 10px 20px rgba(0,0,0,0.07), 0 3px 6px rgba(0,0,0,0.05)',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #F7F1EB; /* clarissa-background */
+        color: #4A4A4A; /* clarissa-text */
+      }
+      .clarissa-scrollbar::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      .clarissa-scrollbar::-webkit-scrollbar-track {
+        background: #F7F1EB; /* clarissa-background */
+      }
+      .clarissa-scrollbar::-webkit-scrollbar-thumb {
+        background: #AD9F97; /* clarissa-secondary */
+        border-radius: 4px;
+      }
+      .clarissa-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #CB956F; /* clarissa-primary */
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://esm.sh/lucide-react@^0.515.0",
+    "zustand": "https://esm.sh/zustand@^5.0.5",
+    "react": "https://esm.sh/react@^19.1.0",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "luc": "https://esm.sh/luc@^0.3.1",
+    "sql.js": "https://esm.sh/sql.js@1.10.3",
+    "sql.js/": "https://esm.sh/sql.js@1.10.3/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>
