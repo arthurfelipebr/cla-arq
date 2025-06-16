@@ -14,3 +14,7 @@ This contains everything you need to run your app locally.
    `npm run server`
 4. Run the app:
    `npm run dev`
+
+## Deploying on CapRover
+
+This repo includes a `captain-definition` file so you can deploy directly to a CapRover server. Build and push your image, or use CapRover's one-click deploy with this repository. The app exposes port `3000` by default.
