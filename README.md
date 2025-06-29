@@ -28,6 +28,10 @@ project root. You can inspect or modify this file with any SQLite tool, e.g.:
 sqlite3 database.sqlite
 ```
 
+The database is initialized with a demo administrator account using the
+credentials `demo@dev.com` / `demopass`. You can log in with these credentials
+or modify the `server/database.js` file to seed a different user.
+
 ## Running with PM2
 
 Install [PM2](https://pm2.keymetrics.io) globally:
