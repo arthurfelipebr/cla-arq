@@ -1,7 +1,9 @@
 import { Client, Project, Lead, CostSimulation, OfficeCostConfigItem, TeamMemberConfigItem, User as TeamUser } from '../types';
 import { DEFAULT_OFFICE_COST_CONFIGS_TEMPLATE, DEFAULT_TEAM_MEMBER_CONFIGS_TEMPLATE, MOCK_TEAM_MEMBERS } from '../constants';
 
-const API_BASE = '/api';
+// Allow overriding the API base URL so the frontend can talk to a remote server
+// when running on a different host. Falls back to relative `/api` for local dev.
+const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
 const fetchJSON = async (url: string, options?: RequestInit) => {
   const res = await fetch(url, options);

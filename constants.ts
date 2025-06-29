@@ -1,7 +1,8 @@
 import { NavItem, Project, ProjectStatus, ProjectType, TaskStatus, InspectionStatus, InspectionType, PaymentStatus, Client, ProjectPhase, ProjectFile, Task, Payment, Contract, Appointment, PaymentMethod, ProjectSubPhase, KanbanColumn, AppointmentType, User, Lead, LeadStatus, LeadSource, CostItem, ComplexityFactorItem, Inspection, OfficeCostConfigItem, TeamMemberConfigItem, ProjectStage, ProjectStageItem } from './types';
 import { Home, Briefcase, Users, FileText, DollarSign, ListChecks, CalendarDays, Settings, ShieldQuestion, LogOut, CheckSquare, GanttChartSquare, Landmark, SearchCode, Lightbulb, Users2, Building, BarChart3, Copy } from 'lucide-react'; // Added Lightbulb, Users2, Building, BarChart3, Copy
 
-export const API_BASE_URL = '/api'; // Mock API base URL
+// API base URL used by some mock helpers. Can be overridden via `VITE_API_BASE`.
+export const API_BASE_URL = import.meta.env.VITE_API_BASE || '/api';
 
 export const NAVIGATION_ITEMS: NavItem[] = [
   { name: 'Dashboard', href: '/', icon: Home, exact: true },

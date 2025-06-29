@@ -3,7 +3,10 @@ import cors from 'cors';
 import db, { initDB } from './database.js';
 
 const app = express();
+// Listen on all network interfaces by default so the API can be reached
+// from the local machine or a remote host.
 const PORT = process.env.PORT || 3001;
+const HOST = process.env.HOST || '0.0.0.0';
 
 initDB();
 app.use(cors());
@@ -78,6 +81,7 @@ app.delete('/api/leads/:id', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.listen(PORT, () => {
-  console.log(`API server running on http://localhost:${PORT}`);
+app.listen(PORT, HOST, () => {
+  const displayHost = HOST === '0.0.0.0' ? 'localhost' : HOST;
+  console.log(`API server running on http://${displayHost}:${PORT}`);
 });
