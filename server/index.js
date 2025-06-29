@@ -29,6 +29,10 @@ const updateRecord = (table, id, record) => {
 const deleteRecord = (table, id) => {
   db.prepare(`DELETE FROM ${table} WHERE id=?`).run(id);
 };
+const getActive = (table) => db.prepare(`SELECT * FROM ${table} WHERE isArchived IS NULL OR isArchived=0`).all();
+const archiveRecord = (table, id) => {
+  db.prepare(`UPDATE ${table} SET isArchived=1 WHERE id=?`).run(id);
+};
 
 // Clients endpoints
 app.get('/api/clients', (req, res) => {
@@ -78,6 +82,55 @@ app.put('/api/leads/:id', (req, res) => {
 });
 app.delete('/api/leads/:id', (req, res) => {
   deleteRecord('leads', req.params.id);
+  res.json({ status: 'ok' });
+});
+
+// Office cost configs endpoints
+app.get('/api/office_cost_configs', (req, res) => {
+  res.json(getActive('office_cost_configs'));
+});
+app.post('/api/office_cost_configs', (req, res) => {
+  insertRecord('office_cost_configs', req.body);
+  res.json({ status: 'ok' });
+});
+app.put('/api/office_cost_configs/:id', (req, res) => {
+  updateRecord('office_cost_configs', req.params.id, req.body);
+  res.json({ status: 'ok' });
+});
+app.delete('/api/office_cost_configs/:id', (req, res) => {
+  archiveRecord('office_cost_configs', req.params.id);
+  res.json({ status: 'ok' });
+});
+
+// Team member configs endpoints
+app.get('/api/team_member_configs', (req, res) => {
+  res.json(getActive('team_member_configs'));
+});
+app.post('/api/team_member_configs', (req, res) => {
+  insertRecord('team_member_configs', req.body);
+  res.json({ status: 'ok' });
+});
+app.put('/api/team_member_configs/:id', (req, res) => {
+  updateRecord('team_member_configs', req.params.id, req.body);
+  res.json({ status: 'ok' });
+});
+app.delete('/api/team_member_configs/:id', (req, res) => {
+  archiveRecord('team_member_configs', req.params.id);
+  res.json({ status: 'ok' });
+});
+
+// Cost simulations endpoints
+app.get('/api/cost_simulations', (req, res) => {
+  const rows = db.prepare('SELECT * FROM cost_simulations').all();
+  const sims = rows.map(r => ({ id: r.id, leadId: r.leadId, ...JSON.parse(r.data) }));
+  res.json(sims);
+});
+app.post('/api/cost_simulations', (req, res) => {
+  insertRecord('cost_simulations', { id: req.body.id, leadId: req.body.leadId, data: JSON.stringify(req.body) });
+  res.json({ status: 'ok' });
+});
+app.put('/api/cost_simulations/:id', (req, res) => {
+  updateRecord('cost_simulations', req.params.id, { leadId: req.body.leadId, data: JSON.stringify(req.body) });
   res.json({ status: 'ok' });
 });
 
