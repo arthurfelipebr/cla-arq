@@ -14,6 +14,11 @@ const fetchJSON = async (url: string, options?: RequestInit) => {
   return res.json();
 };
 
+const recordExists = async (endpoint: string, id: string): Promise<boolean> => {
+  const items: any[] = await fetchJSON(`${API_BASE}/${endpoint}`);
+  return items.some(i => i.id === id);
+};
+
 // --- Client CRUD ---
 export const getClients = async (): Promise<Client[]> => fetchJSON(`${API_BASE}/clients`);
 export const addClient = async (client: Client): Promise<void> => {
@@ -51,18 +56,57 @@ export const deleteLead = async (leadId: string): Promise<void> => {
 };
 
 // --- CostSimulation CRUD (placeholders) ---
-export const getCostSimulations = async (): Promise<CostSimulation[]> => [];
-export const addOrUpdateCostSimulation = async (_sim: CostSimulation): Promise<void> => { /* not implemented */ };
+export const getCostSimulations = async (): Promise<CostSimulation[]> =>
+  fetchJSON(`${API_BASE}/cost_simulations`);
+
+export const addOrUpdateCostSimulation = async (sim: CostSimulation): Promise<void> => {
+  const exists = await recordExists('cost_simulations', sim.id);
+  const url = exists ? `${API_BASE}/cost_simulations/${sim.id}` : `${API_BASE}/cost_simulations`;
+  const method = exists ? 'PUT' : 'POST';
+  await fetchJSON(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(sim)
+  });
+};
 
 // --- OfficeCostConfig CRUD (uses constants for now) ---
-export const getOfficeCostConfigs = async (): Promise<OfficeCostConfigItem[]> => DEFAULT_OFFICE_COST_CONFIGS_TEMPLATE;
-export const addOrUpdateOfficeCostConfig = async (_config: OfficeCostConfigItem): Promise<void> => { /* not implemented */ };
-export const deleteOfficeCostConfig = async (_id: string): Promise<void> => { /* not implemented */ };
+export const getOfficeCostConfigs = async (): Promise<OfficeCostConfigItem[]> =>
+  fetchJSON(`${API_BASE}/office_cost_configs`);
+
+export const addOrUpdateOfficeCostConfig = async (config: OfficeCostConfigItem): Promise<void> => {
+  const exists = await recordExists('office_cost_configs', config.id);
+  const url = exists ? `${API_BASE}/office_cost_configs/${config.id}` : `${API_BASE}/office_cost_configs`;
+  const method = exists ? 'PUT' : 'POST';
+  await fetchJSON(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(config)
+  });
+};
+
+export const deleteOfficeCostConfig = async (id: string): Promise<void> => {
+  await fetchJSON(`${API_BASE}/office_cost_configs/${id}`, { method: 'DELETE' });
+};
 
 // --- TeamMemberConfig CRUD (uses constants for now) ---
-export const getTeamMemberConfigs = async (): Promise<TeamMemberConfigItem[]> => DEFAULT_TEAM_MEMBER_CONFIGS_TEMPLATE;
-export const addOrUpdateTeamMemberConfig = async (_config: TeamMemberConfigItem): Promise<void> => { /* not implemented */ };
-export const deleteTeamMemberConfig = async (_id: string): Promise<void> => { /* not implemented */ };
+export const getTeamMemberConfigs = async (): Promise<TeamMemberConfigItem[]> =>
+  fetchJSON(`${API_BASE}/team_member_configs`);
+
+export const addOrUpdateTeamMemberConfig = async (config: TeamMemberConfigItem): Promise<void> => {
+  const exists = await recordExists('team_member_configs', config.id);
+  const url = exists ? `${API_BASE}/team_member_configs/${config.id}` : `${API_BASE}/team_member_configs`;
+  const method = exists ? 'PUT' : 'POST';
+  await fetchJSON(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(config)
+  });
+};
+
+export const deleteTeamMemberConfig = async (id: string): Promise<void> => {
+  await fetchJSON(`${API_BASE}/team_member_configs/${id}`, { method: 'DELETE' });
+};
 
 // --- TeamUser CRUD ---
 export const getTeamUsers = async (): Promise<TeamUser[]> => MOCK_TEAM_MEMBERS;

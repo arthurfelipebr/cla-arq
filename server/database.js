@@ -57,6 +57,27 @@ export function initDB() {
       createdAt TEXT,
       updatedAt TEXT
     );
+
+    CREATE TABLE IF NOT EXISTS office_cost_configs (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      monthlyBaseValue REAL,
+      isArchived INTEGER DEFAULT 0
+    );
+
+    CREATE TABLE IF NOT EXISTS team_member_configs (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      role TEXT,
+      hourlyRate REAL,
+      isArchived INTEGER DEFAULT 0
+    );
+
+    CREATE TABLE IF NOT EXISTS cost_simulations (
+      id TEXT PRIMARY KEY,
+      leadId TEXT,
+      data TEXT
+    );
   `);
 }
 
