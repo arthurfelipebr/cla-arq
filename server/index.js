@@ -1,6 +1,20 @@
 import express from 'express';
 import cors from 'cors';
 import db, { initDB } from './database.js';
+import {
+  getAllOfficeCostConfigs,
+  addOrUpdateOfficeCostConfig,
+  deleteOfficeCostConfig,
+  getAllTeamMemberConfigs,
+  addOrUpdateTeamMemberConfig,
+  deleteTeamMemberConfig,
+  getAllUsers,
+  addOrUpdateUser,
+  deleteUser,
+  getAllCostSimulations,
+  addOrUpdateCostSimulation,
+  deleteCostSimulation
+} from './dataAccess.js';
 
 const app = express();
 // Listen on all network interfaces by default so the API can be reached
@@ -9,6 +23,11 @@ const PORT = process.env.PORT || 3001;
 const HOST = process.env.HOST || '0.0.0.0';
 
 initDB();
+const initialOffice = getAllOfficeCostConfigs().length;
+const initialTeamCfg = getAllTeamMemberConfigs().length;
+const initialUsers = getAllUsers().length;
+const initialSims = getAllCostSimulations().length;
+console.log(`Loaded ${initialOffice} office configs, ${initialTeamCfg} team member configs, ${initialUsers} users, ${initialSims} cost simulations`);
 app.use(cors());
 app.use(express.json());
 
@@ -87,51 +106,150 @@ app.delete('/api/leads/:id', (req, res) => {
 
 // Office cost configs endpoints
 app.get('/api/office_cost_configs', (req, res) => {
-  res.json(getActive('office_cost_configs'));
+  try {
+    res.json(getAllOfficeCostConfigs());
+  } catch (err) {
+    console.error('Failed to load office cost configs', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 app.post('/api/office_cost_configs', (req, res) => {
-  insertRecord('office_cost_configs', req.body);
-  res.json({ status: 'ok' });
+  try {
+    addOrUpdateOfficeCostConfig(req.body);
+    res.json({ status: 'ok' });
+  } catch (err) {
+    console.error('Failed to save office cost config', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 app.put('/api/office_cost_configs/:id', (req, res) => {
-  updateRecord('office_cost_configs', req.params.id, req.body);
-  res.json({ status: 'ok' });
+  try {
+    addOrUpdateOfficeCostConfig({ ...req.body, id: req.params.id });
+    res.json({ status: 'ok' });
+  } catch (err) {
+    console.error('Failed to update office cost config', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 app.delete('/api/office_cost_configs/:id', (req, res) => {
-  archiveRecord('office_cost_configs', req.params.id);
-  res.json({ status: 'ok' });
+  try {
+    deleteOfficeCostConfig(req.params.id);
+    res.json({ status: 'ok' });
+  } catch (err) {
+    console.error('Failed to delete office cost config', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // Team member configs endpoints
 app.get('/api/team_member_configs', (req, res) => {
-  res.json(getActive('team_member_configs'));
+  try {
+    res.json(getAllTeamMemberConfigs());
+  } catch (err) {
+    console.error('Failed to load team member configs', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 app.post('/api/team_member_configs', (req, res) => {
-  insertRecord('team_member_configs', req.body);
-  res.json({ status: 'ok' });
+  try {
+    addOrUpdateTeamMemberConfig(req.body);
+    res.json({ status: 'ok' });
+  } catch (err) {
+    console.error('Failed to save team member config', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 app.put('/api/team_member_configs/:id', (req, res) => {
-  updateRecord('team_member_configs', req.params.id, req.body);
-  res.json({ status: 'ok' });
+  try {
+    addOrUpdateTeamMemberConfig({ ...req.body, id: req.params.id });
+    res.json({ status: 'ok' });
+  } catch (err) {
+    console.error('Failed to update team member config', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 app.delete('/api/team_member_configs/:id', (req, res) => {
-  archiveRecord('team_member_configs', req.params.id);
-  res.json({ status: 'ok' });
+  try {
+    deleteTeamMemberConfig(req.params.id);
+    res.json({ status: 'ok' });
+  } catch (err) {
+    console.error('Failed to delete team member config', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Users (team members) endpoints
+app.get('/api/team-members', (req, res) => {
+  try {
+    res.json(getAllUsers());
+  } catch (err) {
+    console.error('Failed to load users', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+app.post('/api/team-members', (req, res) => {
+  try {
+    addOrUpdateUser(req.body);
+    res.json({ status: 'ok' });
+  } catch (err) {
+    console.error('Failed to save user', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+app.put('/api/team-members/:id', (req, res) => {
+  try {
+    addOrUpdateUser({ ...req.body, id: req.params.id });
+    res.json({ status: 'ok' });
+  } catch (err) {
+    console.error('Failed to update user', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+app.delete('/api/team-members/:id', (req, res) => {
+  try {
+    deleteUser(req.params.id);
+    res.json({ status: 'ok' });
+  } catch (err) {
+    console.error('Failed to delete user', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // Cost simulations endpoints
 app.get('/api/cost_simulations', (req, res) => {
-  const rows = db.prepare('SELECT * FROM cost_simulations').all();
-  const sims = rows.map(r => ({ id: r.id, leadId: r.leadId, ...JSON.parse(r.data) }));
-  res.json(sims);
+  try {
+    res.json(getAllCostSimulations());
+  } catch (err) {
+    console.error('Failed to load cost simulations', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 app.post('/api/cost_simulations', (req, res) => {
-  insertRecord('cost_simulations', { id: req.body.id, leadId: req.body.leadId, data: JSON.stringify(req.body) });
-  res.json({ status: 'ok' });
+  try {
+    addOrUpdateCostSimulation(req.body);
+    res.json({ status: 'ok' });
+  } catch (err) {
+    console.error('Failed to save cost simulation', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 app.put('/api/cost_simulations/:id', (req, res) => {
-  updateRecord('cost_simulations', req.params.id, { leadId: req.body.leadId, data: JSON.stringify(req.body) });
-  res.json({ status: 'ok' });
+  try {
+    addOrUpdateCostSimulation({ ...req.body, id: req.params.id });
+    res.json({ status: 'ok' });
+  } catch (err) {
+    console.error('Failed to update cost simulation', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+app.delete('/api/cost_simulations/:id', (req, res) => {
+  try {
+    deleteCostSimulation(req.params.id);
+    res.json({ status: 'ok' });
+  } catch (err) {
+    console.error('Failed to delete cost simulation', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 app.listen(PORT, HOST, () => {
