@@ -2,6 +2,14 @@ import Database from 'better-sqlite3';
 
 const db = new Database('database.sqlite');
 
+function ensureColumn(table, column, typeDef) {
+  const columns = db.prepare(`PRAGMA table_info(${table})`).all();
+  const exists = columns.some(c => c.name === column);
+  if (!exists) {
+    db.prepare(`ALTER TABLE ${table} ADD COLUMN ${column} ${typeDef}`).run();
+  }
+}
+
 export function initDB() {
   db.exec(`
     CREATE TABLE IF NOT EXISTS clients (
@@ -91,6 +99,17 @@ export function initDB() {
       isArchived INTEGER DEFAULT 0
     );
   `);
+
+  // Ensure newer columns exist when upgrading from an older schema
+  const tablesWithArchive = [
+    'office_cost_configs',
+    'team_member_configs',
+    'cost_simulations',
+    'users'
+  ];
+  for (const tbl of tablesWithArchive) {
+    ensureColumn(tbl, 'isArchived', 'INTEGER DEFAULT 0');
+  }
 
   // Seed demo admin user if it doesn't exist
   const count = db
