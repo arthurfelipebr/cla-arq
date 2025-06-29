@@ -10,12 +10,13 @@ using a local **SQLite** database so no external database server is required.
 
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. (Optional) If the API will run on another host or port, set `VITE_API_BASE`
-   in `.env.local` to its URL (e.g. `http://<ip>:3005/api`).
-4. Start the API server (uses SQLite):
+2. Copy `.env.example` to `.env.local` and update the values:
+   `cp .env.example .env.local`
+   - Set `GEMINI_API_KEY` to your Gemini API key
+   - (Optional) adjust `VITE_API_BASE` if the API runs on another host
+3. Start the API server (uses SQLite):
    `PORT=3005 npm run server`
-5. Run the frontend (Vite dev server on port `5173` by default):
+4. Run the frontend (Vite dev server on port `5173` by default):
    `npm run dev`
 
 ### Database
@@ -52,7 +53,3 @@ You can view logs with `pm2 logs` and persist the process list with:
 ```
 pm2 save
 ```
-
-## Deploying on CapRover
-
-This repo includes a `captain-definition` file so you can deploy directly to a CapRover server. Build and push your image, or use CapRover's one-click deploy with this repository. The app exposes port `3000` by default.
