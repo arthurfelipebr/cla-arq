@@ -78,7 +78,33 @@ export function initDB() {
       leadId TEXT,
       data TEXT
     );
+
+    CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      email TEXT UNIQUE,
+      password TEXT,
+      role TEXT,
+      avatarUrl TEXT,
+      hourlyRate REAL
+    );
   `);
+
+  // Seed demo admin user if it doesn't exist
+  const count = db
+    .prepare('SELECT COUNT(*) as count FROM users WHERE email = ?')
+    .get('demo@dev.com').count;
+  if (count === 0) {
+    db.prepare(
+      'INSERT INTO users (id, name, email, password, role) VALUES (@id, @name, @email, @password, @role)'
+    ).run({
+      id: 'user-admin',
+      name: 'Demo Admin',
+      email: 'demo@dev.com',
+      password: 'demopass',
+      role: 'admin'
+    });
+  }
 }
 
 export default db;
