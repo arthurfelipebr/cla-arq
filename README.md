@@ -13,7 +13,7 @@ using a local **SQLite** database so no external database server is required.
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Start the API server (uses SQLite):
    `PORT=3005 npm run server`
-4. Run the app:
+4. Run the frontend (Vite dev server on port `5173` by default):
    `npm run dev`
 
 ### Database
@@ -33,14 +33,23 @@ Install [PM2](https://pm2.keymetrics.io) globally:
 npm install -g pm2
 ```
 
-Start the API server on port `3005` and keep it running in the background:
+Use the provided `ecosystem.config.cjs` to run both the API server and the
+frontend under PM2:
 
 ```
-PORT=3005 pm2 start server/index.js --name gestao-api
+pm2 start ecosystem.config.cjs
 ```
 
-View logs with `pm2 logs gestao-api` and save the process list across reboots
-using `pm2 save`.
+This starts two processes:
+
+* `gestao-api` &ndash; runs `server/index.js` on port `3005`
+* `gestao-app` &ndash; runs `npm run dev` (Vite dev server)
+
+You can view logs with `pm2 logs` and persist the process list with:
+
+```
+pm2 save
+```
 
 ## Deploying on CapRover
 
