@@ -11,9 +11,11 @@ using a local **SQLite** database so no external database server is required.
 1. Install dependencies:
    `npm install`
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Start the API server (uses SQLite):
+3. (Optional) If the API will run on another host or port, set `VITE_API_BASE`
+   in `.env.local` to its URL (e.g. `http://<ip>:3005/api`).
+4. Start the API server (uses SQLite):
    `PORT=3005 npm run server`
-4. Run the frontend (Vite dev server on port `5173` by default):
+5. Run the frontend (Vite dev server on port `5173` by default):
    `npm run dev`
 
 ### Database
