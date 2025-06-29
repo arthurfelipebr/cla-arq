@@ -109,7 +109,20 @@ export const deleteTeamMemberConfig = async (id: string): Promise<void> => {
 };
 
 // --- TeamUser CRUD ---
-export const getTeamUsers = async (): Promise<TeamUser[]> => MOCK_TEAM_MEMBERS;
-export const addOrUpdateTeamUser = async (_user: TeamUser): Promise<void> => { /* not implemented */ };
+export const getTeamUsers = async (): Promise<TeamUser[]> =>
+  fetchJSON(`${API_BASE}/team-members`);
+
+export const addOrUpdateTeamUser = async (user: TeamUser): Promise<void> => {
+  const exists = await recordExists('team-members', user.id);
+  const url = exists
+    ? `${API_BASE}/team-members/${user.id}`
+    : `${API_BASE}/team-members`;
+  const method = exists ? 'PUT' : 'POST';
+  await fetchJSON(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(user)
+  });
+};
 
 export const initDB = async (): Promise<boolean> => true;

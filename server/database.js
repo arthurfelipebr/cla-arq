@@ -76,7 +76,8 @@ export function initDB() {
     CREATE TABLE IF NOT EXISTS cost_simulations (
       id TEXT PRIMARY KEY,
       leadId TEXT,
-      data TEXT
+      data TEXT,
+      isArchived INTEGER DEFAULT 0
     );
 
     CREATE TABLE IF NOT EXISTS users (
@@ -86,7 +87,8 @@ export function initDB() {
       password TEXT,
       role TEXT,
       avatarUrl TEXT,
-      hourlyRate REAL
+      hourlyRate REAL,
+      isArchived INTEGER DEFAULT 0
     );
   `);
 
